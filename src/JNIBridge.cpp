@@ -7,7 +7,7 @@ JNIBridge::JNIBridge(JNIEnv *env, jobject *thisObj) {
 	this->thisObj = thisObj;
 }
 
-int JNIBridge::refresh(int refresh) {
+void JNIBridge::refresh(int refresh) {
 //	std::cout << "refresh" << std::endl;
 
 	jclass thisClass = (env)->GetObjectClass(*thisObj);
@@ -15,20 +15,15 @@ int JNIBridge::refresh(int refresh) {
 	env->CallObjectMethod(*thisObj, mid, refresh);
 }
 
-int JNIBridge::update() {
-//	std::cout << "update" << std::endl;
-
-	// Update game
-	jclass thisClass = (env)->GetObjectClass(*thisObj);
-	jmethodID mid = env->GetMethodID( thisClass, "onUpdate", "()V");
-	env->CallObjectMethod(*thisObj, mid);
-
-	// Change count
-	jfieldID fidNumber = (env)->GetFieldID(thisClass, "number", "I");
-	jint number = (env)->GetIntField(*thisObj, fidNumber);
-	number++;
-	(env)->SetIntField(*thisObj, fidNumber, number);
-}
+//int JNIBridge::update() {
+////	std::cout << "update" << std::endl;
+//
+//	// Change count
+//	jfieldID fidNumber = (env)->GetFieldID(thisClass, "number", "I");
+//	jint number = (env)->GetIntField(*thisObj, fidNumber);
+//	number++;
+//	(env)->SetIntField(*thisObj, fidNumber, number);
+//}
 
 void JNIBridge::getItemInfos(Render* render) {
 	std::cout << "getItemInfos" << std::endl;
@@ -157,11 +152,11 @@ void JNIBridge::getUI(std::list<View>* views) {
 	jmethodID midGetHeight = env->GetMethodID(clsTextView, "getHeight", "()I");
 	jmethodID midGetColor= env->GetMethodID(clsTextView, "getColor", "()I");
 
-	if((clsArrayList != 0) && (midArrayListSize != 0)){
+	if ((clsArrayList != 0) && (midArrayListSize != 0)) {
 		int arrayListSize = env->CallIntMethod(mydata,  midArrayListSize );//ok
-		if((arrayListSize > 0)&& (midArrayListGet != 0) && (clsInteger != 0) && (midIntegerIntValue != 0)){
+		if ((arrayListSize > 0)&& (midArrayListGet != 0) && (clsInteger != 0) && (midIntegerIntValue != 0)) {
 
-			for(int i=0; i<arrayListSize; i++){
+			for (int i=0; i<arrayListSize; i++) {
 				jobject arrayElement = env->CallObjectMethod(mydata,  midArrayListGet, i);//get: will contain 0 :(
 				int x = env->CallIntMethod(arrayElement, midGetPosX);
 				int y = env->CallIntMethod(arrayElement, midGetPosY);
@@ -169,17 +164,14 @@ void JNIBridge::getUI(std::list<View>* views) {
 				int height = env->CallIntMethod(arrayElement, midGetHeight);
 				int rgb = env->CallIntMethod(arrayElement, midGetColor);
 
-				sf::Color color = sf::Color((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, (rgb >> 0) & 0xff);
+				sf::Color color = sf::Color::Transparent;
+				if (rgb != -1) {
+					color = sf::Color((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, (rgb >> 0) & 0xff);
+				}
 				views->push_back(View(x, y, width, height, color));
 			}
 		}
 	}
-}
-
-int JNIBridge::longUpdate() {
-	jclass thisClass = (env)->GetObjectClass(*thisObj);
-	jmethodID mid = env->GetMethodID( thisClass, "onLongUpdate", "()V");
-	env->CallObjectMethod(*thisObj, mid);
 }
 
 void JNIBridge::getUIText(std::list<TextView>* views) {
@@ -200,20 +192,23 @@ void JNIBridge::getUIText(std::list<TextView>* views) {
 	jmethodID midGetPosX = env->GetMethodID(clsTextView, "getPosX", "()I");
 	jmethodID midGetPosY = env->GetMethodID(clsTextView, "getPosY", "()I");
 	jmethodID midGetCharacterSize = env->GetMethodID(clsTextView, "getCharacterSize", "()I");
+	jmethodID midGetColor= env->GetMethodID(clsTextView, "getRGB", "()I");
 
-	if((clsArrayList != 0) && (midArrayListSize != 0)){
+	if ((clsArrayList != 0) && (midArrayListSize != 0)) {
 		int arrayListSize = env->CallIntMethod(mydata,  midArrayListSize );//ok
-		if((arrayListSize > 0)&& (midArrayListGet != 0) && (clsInteger != 0) && (midIntegerIntValue != 0)){
+		if ((arrayListSize > 0)&& (midArrayListGet != 0) && (clsInteger != 0) && (midIntegerIntValue != 0)) {
 
-			for(int i=0; i<arrayListSize; i++){
+			for (int i = 0; i < arrayListSize; i++) {
 				jobject arrayElement = env->CallObjectMethod(mydata,  midArrayListGet, i);//get: will contain 0 :(
 				jstring mydata = (jstring) env->CallObjectMethod(arrayElement, midGetString);
 				int x = env->CallIntMethod(arrayElement, midGetPosX);
 				int y = env->CallIntMethod(arrayElement, midGetPosY);
 				int size = env->CallIntMethod(arrayElement, midGetCharacterSize);
+				int rgb = env->CallIntMethod(arrayElement, midGetColor);
+				sf::Color color = sf::Color((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, (rgb >> 0) & 0xff);
 				if (mydata != NULL) {
 					const char* text = env->GetStringUTFChars(mydata, NULL);
-					views->push_back(TextView(text, x, y, size));
+					views->push_back(TextView(text, color, x, y, size));
 					env->ReleaseStringUTFChars(mydata, text);
 				}
 			}

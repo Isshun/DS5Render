@@ -18,10 +18,8 @@ Render::Render(JNIBridge* bridge) {
 	_maxId = 0;
 	_count = 0;
 	_invalid = 0;
-		_viewX = 130;
-		_viewY = 130;
-//		_viewX = 0;
-//		_viewY = 0;
+	_viewX = 130;
+	_viewY = 130;
 	_viewWidth = 100;
 	_viewHeight = 80;
 	lastX = 0;
@@ -123,15 +121,15 @@ void Render::init() {
 		gettimeofday(&start, NULL);
 
 		// Events
-//		std::cout << "handleEvents" << std::endl;
+		//		std::cout << "handleEvents" << std::endl;
 		handleEvents();
 
 		// Render
-//		std::cout << "handleRenders" << std::endl;
+		//		std::cout << "handleRenders" << std::endl;
 		handleRenders();
 
 		// Updates
-//		std::cout << "handleUpdate" << std::endl;
+		//		std::cout << "handleUpdate" << std::endl;
 		handleUpdates();
 
 		// Sleep
@@ -147,29 +145,20 @@ void Render::init() {
 void Render::handleUpdates() {
 	if (_count % 60 == 0) {
 		_invalid = 0;
-//		gettimeofday(&start, NULL);
+		//		gettimeofday(&start, NULL);
 		if (!_isRightClick) {
 			_bridge->getItems(_mapItems, _mapStructures, _mapAreas);
 		}
-//		gettimeofday(&end, NULL);
-//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
+		//		gettimeofday(&end, NULL);
+		//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
 		//printf("update: %ld milliseconds\n", mtime);
 	}
 
-	if (_count % 20 == 0) {
-		_bridge->refresh(_count / 20);
-	}
-
-	if (_count % 200 == 0) {
-		_bridge->longUpdate();
-	}
-
 	if (_count % 10 == 0) {
-//		gettimeofday(&start, NULL);
-		_bridge->update();
+		//		gettimeofday(&start, NULL);
 		_bridge->getCharacters(_mapCharacters);
-//		gettimeofday(&end, NULL);
-//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
+		//		gettimeofday(&end, NULL);
+		//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
 		//printf("update char: %ld milliseconds\n", mtime);
 	}
 
@@ -189,12 +178,6 @@ void Render::handleEvents() {
 		}
 		if (event.type == sf::Event::MouseMoved && _isRightClick) {
 			_transform->translate(-(lastX - event.mouseMove.x), -(lastY - event.mouseMove.y));
-//			_transform->translate(1, 1);
-			std::cout << event.mouseMove.x << " x " << event.mouseMove.y << std::endl;
-
-//				_realX += lastX - event.mouseButton.x;
-//				_realY += lastY - event.mouseButton.y;
-//			_invalid = 0;
 			lastX = event.mouseMove.x;
 			lastY = event.mouseMove.y;
 		}
@@ -301,25 +284,25 @@ void Render::handleRenders() {
 	_window->draw(*_sprite2, renderState);
 	_window->draw(*_sprite3, renderState);
 
-//	for (int x = _viewX; x < _viewX + _viewWidth; x++) {
-//		for (int y = _viewY; y < _viewY + _viewHeight; y++) {
-//			int id = _mapItems[x][y];
-//			std::stringstream ss;
-//			ss << id;
-//			sf::Text text;
-//			text.setColor(sf::Color::Black);
-//			text.setFont(*_font);
-//			text.setString(ss.str());
-//			text.setCharacterSize(12);
-//			text.setPosition((x-_viewX) * 32, (y-_viewY ) *32);
-//			_window->draw(text);
-//		}
-//	}
+	//	for (int x = _viewX; x < _viewX + _viewWidth; x++) {
+	//		for (int y = _viewY; y < _viewY + _viewHeight; y++) {
+	//			int id = _mapItems[x][y];
+	//			std::stringstream ss;
+	//			ss << id;
+	//			sf::Text text;
+	//			text.setColor(sf::Color::Black);
+	//			text.setFont(*_font);
+	//			text.setString(ss.str());
+	//			text.setCharacterSize(12);
+	//			text.setPosition((x-_viewX) * 32, (y-_viewY ) *32);
+	//			_window->draw(text);
+	//		}
+	//	}
 
-//	std::cout << "drawCharacters" << std::endl;
+	//	std::cout << "drawCharacters" << std::endl;
 	drawCharacters(renderState);
 
-//	std::cout << "drawUI" << std::endl;
+	//	std::cout << "drawUI" << std::endl;
 	drawUI();
 
 	_window->display();
@@ -341,11 +324,11 @@ void Render::drawCharacters(sf::RenderStates renderState) {
 
 void Render::drawUI() {
 	if (_count % 20 == 0) {
-//		gettimeofday(&start, NULL);
+		//		gettimeofday(&start, NULL);
 		_bridge->getUIText(&list);
 		_bridge->getUI(&listViews);
-//		gettimeofday(&end, NULL);
-//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
+		//		gettimeofday(&end, NULL);
+		//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
 		//printf("update UI: %ld milliseconds\n", mtime);
 	}
 
@@ -365,6 +348,7 @@ void Render::drawUI() {
 		sf::Text text;
 		text.setFont(*_font);
 		text.setString(ss.str());
+		text.setColor((*it).getColor());
 		text.setCharacterSize((*it).getSize());
 		text.setPosition((*it).getPosX(), (*it).getPosY());
 		_window->draw(text);

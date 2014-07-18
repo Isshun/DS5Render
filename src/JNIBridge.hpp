@@ -16,9 +16,7 @@ private:
   
 public:
     JNIBridge(JNIEnv *env, jobject *thisObj);
-    int update();
-    int longUpdate();
-    int refresh(int refresh);
+    void refresh(int refresh);
     void click(int x, int y);
     void getItemInfos(Render* render);
     void getItems(long** items, long ** structures, long ** areas);

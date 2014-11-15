@@ -6,13 +6,12 @@
 #include <SFML/Graphics.hpp>
 #include "TextView.hpp"
 #include "View.hpp"
-
-class JNIBridge;
+#include "Bridge.hpp"
 
 class Render
 {
 private:
-	JNIBridge* _bridge;
+	Bridge* _bridge;
 	std::map<int, sf::Sprite*>  _map;
 	int	_maxId;
 
@@ -43,6 +42,7 @@ private:
 	int	lastX;
 	int	lastY;
 
+	int _frame;
 	int _viewX;
 	int _viewY;
 	int _realX;
@@ -54,7 +54,7 @@ private:
 	std::list<View> listViews;
 
 public:
-	Render(JNIBridge* bridge);
+	Render(Bridge* bridge);
 	~Render();
 	void handleEvents();
 	void handleUpdates();

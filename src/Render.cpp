@@ -5,12 +5,12 @@
 #include "Render.hpp"
 #include <sys/time.h>
 #include <unistd.h>
-#include "JNIBridge.hpp"
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1200
 
-Render::Render(JNIBridge* bridge) {
+Render::Render(Bridge* bridge) {
+    _frame = 0;
 	_bridge = bridge;
 	_map = std::map<int, sf::Sprite*>();
 	_pressX = 0;
@@ -353,4 +353,14 @@ void Render::drawUI() {
 		text.setPosition((*it).getPosX(), (*it).getPosY());
 		_window->draw(text);
 	}
+    
+    std::stringstream ss;
+    ss << _frame++;
+    sf::Text text;
+    text.setFont(*_font);
+    text.setString(ss.str());
+    //text.setColor((*it).getColor());
+    //text.setCharacterSize((*it).getSize());
+    text.setPosition(10, 10);
+    _window->draw(text);
 }

@@ -1,22 +1,20 @@
-#ifndef JNIBRIDGE_HPP
-#define JNIBRIDGE_HPP
+#ifndef TCPBRIDGE_HPP
+#define TCPBRIDGE_HPP
 
-#include <jni.h>
+#include <SFML/Network.hpp>
 #include <list>
 #include "TextView.hpp"
 #include "View.hpp"
 #include "Render.hpp"
 #include "Bridge.hpp"
 
-class JNIBridge
+class TCPBridge : public Bridge
 {
 private:
-  JNIEnv*     env;
-  jobject*    thisObj;
-  JNIBridge*  bridge;
+    sf::TcpSocket* socket;
   
 public:
-    JNIBridge(JNIEnv *env, jobject *thisObj);
+    TCPBridge(std::string url, int port);
     void refresh(int refresh);
     void click(int x, int y);
     void getItemInfos(Render* render);
@@ -24,6 +22,7 @@ public:
     void getCharacters(long** characters);
     void getUI(std::list<View>* views);
     void getUIText(std::list<TextView>* views);
+    void sendRequest(std::string cmd, std::string* response);
 };
 
 #endif

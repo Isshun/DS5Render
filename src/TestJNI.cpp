@@ -1,15 +1,25 @@
-#include <jni.h> 
 #include <stdio.h> 
 #include "TestJNI.h" 
 #include "Render.hpp"
+
+#if DEBUG
+#include "TCPBridge.hpp"
+#else
+#include <jni.h> 
 #include "JNIBridge.hpp"
+#endif
+
 
 void display( long * data ) {
 }
 
 JNIEXPORT void JNICALL Java_alone_in_deepspace_Main_init(JNIEnv *env, jobject thisObj, jobjectArray stringArrays) 
 { 
-  JNIBridge bridge = JNIBridge(env, &thisObj);
+#if DEBUG
+  Bridge bridge = TCPBridge("127.0.0.1", 4242);
+#else
+  Bridge bridge = JNIBridge(env, &thisObj);
+#endif
 
   Render render = Render(&bridge);
 

@@ -147,7 +147,7 @@ void Render::handleUpdates() {
 		_invalid = 0;
 		//		gettimeofday(&start, NULL);
 		if (!_isRightClick) {
-			_bridge->getItems(_mapItems, _mapStructures, _mapAreas);
+//			_bridge->getItems(_mapItems, _mapStructures, _mapAreas);
 		}
 		//		gettimeofday(&end, NULL);
 		//		mtime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) + 0.5;
@@ -207,6 +207,7 @@ void Render::releaseRightButton(int x, int y) {
 		_viewX += (_pressX - x) / 32;
 		_viewY += (_pressY - y) / 32;
 		_invalid = 0;
+        _bridge->getItems(_mapItems, _mapStructures, _mapAreas, _viewX, _viewY, _viewWidth, _viewHeight);
 	}
 }
 

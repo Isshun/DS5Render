@@ -14,7 +14,7 @@ public:
     virtual void refresh(int refresh) = 0;
     virtual void click(int x, int y) = 0;
     virtual void getItemInfos(Render* render) = 0;
-    virtual void getItems(long** items, long ** structures, long ** areas) = 0;
+    virtual void getItems(long** items, long ** structures, long ** areas, int x, int y, int width, int height) = 0;
     virtual void getCharacters(long** characters) = 0;
     virtual void getUI(std::list<View>* views) = 0;
     virtual void getUIText(std::list<TextView>* views) = 0;

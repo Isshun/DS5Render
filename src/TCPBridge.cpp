@@ -4,6 +4,7 @@
 #include "rapidxml.hpp"
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
 
 using namespace rapidxml;
 
@@ -54,11 +55,14 @@ void TCPBridge::getItemInfos(Render* render) {
     std::cout << "done " << std::endl;
 }
 
-void TCPBridge::getItems(long ** items, long ** structures, long ** areas) {
+void TCPBridge::getItems(long ** items, long ** structures, long ** areas, int x, int y, int width, int height) {
 	std::cout << "getItems" << std::endl;
     
     std::string str;
-    sendRequest("getItems\r\n", &str);
+    std::stringstream stream;
+    
+    stream << "getItems\r\n" << x << "\r\n" << y << "\r\n" << width << "\r\n" << height << "\r\n";
+    sendRequest(stream.str().c_str(), &str);
     
     std::cout << "size " << str.size() << std::endl;
     

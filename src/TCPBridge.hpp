@@ -18,7 +18,7 @@ public:
     void refresh(int refresh);
     void click(int x, int y);
     void getItemInfos(Render* render);
-    void getItems(long** items, long ** structures, long ** areas);
+    void getItems(long** items, long ** structures, long ** areas, int x, int y, int width, int height);
     void getCharacters(long** characters);
     void getUI(std::list<View>* views);
     void getUIText(std::list<TextView>* views);
